@@ -1,3 +1,1 @@
-<template>
-  users-view
-</template>
+<template>users-view</template>
