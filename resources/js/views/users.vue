@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import ArrowLongLeft from '../components/icons/arrow-long-left.vue'
 import ArrowLongRight from '../components/icons/arrow-long-right.vue'
 import ArrowLongUp from '../components/icons/arrow-long-up.vue'
@@ -6,6 +7,10 @@ import ArrowLongDown from '../components/icons/arrow-long-down.vue'
 import ElipsisVertical from '../components/icons/elipsis-vertical.vue'
 import PlusIcon from '../components/icons/plus.vue'
 import SearchIcon from '../components/icons/search.vue'
+
+import UserRegistrationModal from '../components/user-registration-modal.vue'
+
+const showUserRegistrationModal = ref(false)
 </script>
 
 <template>
@@ -20,6 +25,7 @@ import SearchIcon from '../components/icons/search.vue'
     <div class="flex flex-col mt-6 md:flex-row md:-mx-1 md:mt-0">
       <button
         class="px-6 py-3 focus:outline-none mt-4 text-white bg-blue-600 rounded-lg md:mt-0 md:mx-1 hover:bg-blue-500"
+        @click="showUserRegistrationModal = true"
       >
         <div class="flex items-center justify-center -mx-1">
           <PlusIcon class="w-6 h-6" />
@@ -45,7 +51,10 @@ import SearchIcon from '../components/icons/search.vue'
     </div>
 
     <div class="flex flex-col mt-6">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="mb-6">
+        <UserRegistrationModal v-show="showUserRegistrationModal" />
+      </div>
+      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div
             class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg"
