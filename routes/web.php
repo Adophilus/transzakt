@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/dashboard');
 });
+
+Route::get('{path}', function () {
+    return view('index');
+})->where('path', '(dashboard|users|settings|transactions)');
