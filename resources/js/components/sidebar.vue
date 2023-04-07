@@ -15,24 +15,24 @@ import UserIcon from './icons/user.vue'
                 </a>
 
                 <nav class="flex flex-col items-center space-y-6">
-                    <a href="#" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
-                      <ChartBarIcon class="w-6 h-6 group-hover:stroke-blue-700"/>
-                    </a>
+                    <router-link to="/dashboard" activeClass="bg-white active" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
+                      <ChartBarIcon class="w-6 h-6 group-hover:stroke-blue-700 group-[.active]:stroke-blue-700"/>
+                    </router-link>
 
-                    <a href="#" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
-                      <UserIcon class="w-6 h-6 group-hover:stroke-blue-700"/>
-                    </a>
+                    <router-link to="/users" activeClass="bg-white active" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
+                      <UserIcon class="w-6 h-6 group-hover:stroke-blue-700 group-[.active]:stroke-blue-700"/>
+                    </router-link>
 
-                    <a href="#" class="p-3 transition-colors duration-300 bg-white rounded-lg">
-                      <CreditCartIcon class="w-6 h-6 group-hover:stroke-blue-700"/>
-                    </a>
+                    <router-link to="/transactions" activeClass="bg-white active" class="p-3 transition-colors duration-300 rounded-lg group hover:bg-white">
+                      <CreditCartIcon class="w-6 h-6 group-hover:stroke-blue-700 group-[.active]:stroke-blue-700"/>
+                    </router-link>
                 </nav>
             </div>
 
             <div class="flex justify-center py-5 border-t border-gray-600">
-                <a href="#" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
-                      <CogIcon class="w-6 h-6 group-hover:stroke-blue-700"/>
-                </a>
+                <router-link to="/settings" class="p-2 transition-colors duration-300 rounded-lg group hover:bg-white">
+                      <CogIcon class="w-6 h-6 group-hover:stroke-blue-700 group-[.active]:stroke-blue-700" />
+                </router-link>
             </div>
         </aside>
         </template>
