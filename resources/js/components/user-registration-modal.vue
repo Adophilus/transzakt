@@ -101,10 +101,16 @@ const submitUserRegistrationDetails = async (event) => {
         </div>
       </div>
 
-      <div class="flex justify-end mt-6">
+<div class="flex gap-x-6 justify-end mt-6">
+        <button
+        @click="emit('cancel')"
+          class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+        >
+         Cancel 
+        </button>
         <button
           type="submit"
-          class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+          class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
         >
           Save
         </button>

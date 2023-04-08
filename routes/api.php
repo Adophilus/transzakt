@@ -21,3 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
 Route::post('/users', [App\Http\Controllers\UserController::class, 'create']);
+Route::post('/users/{user_id}/transactions', [App\Http\Controllers\UserController::class, 'createTransaction']);
+Route::post('/users/{user_id}/block', [App\Http\Controllers\UserController::class, 'block']);
+Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::class, 'unblock']);
+
+Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index']);

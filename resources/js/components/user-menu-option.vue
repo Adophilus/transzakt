@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import {
   ChevronDownIcon,
@@ -8,7 +8,8 @@ import {
   CreditCardIcon
 } from '@heroicons/vue/20/solid'
 
-const emit = defineEmits(['block', 'transact', 'delete'])
+const emit = defineEmits(['block', 'unblock', 'transact', 'delete'])
+const props = defineProps(['user'])
 </script>
 
 <template>
@@ -34,23 +35,30 @@ const emit = defineEmits(['block', 'transact', 'delete'])
           <div class="px-1 py-1">
             <MenuItem v-slot="{ active }">
               <button
-              @click="emit('block')"
+                @click="props.user.blocked ? emit('unblock') : emit('block')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
                   'group flex w-full items-center rounded-md px-2 py-2 text-sm'
                 ]"
               >
                 <NoSymbolIcon
+                  v-if="props.user.blocked"
                   :active="active"
                   class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
                   aria-hidden="true"
                 />
-                Block
+                <CheckCircleIcon
+                v-else
+                  :active="active"
+                  class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
+                  aria-hidden="true" />
+
+                {{ props.user.blocked ? 'Unblock' : 'Block' }}
               </button>
             </MenuItem>
             <MenuItem v-slot="{ active }">
               <button
-              @click="emit('transact')"
+                @click="emit('transact')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
                   'group flex w-full items-center rounded-md px-2 py-2 text-sm'
@@ -66,7 +74,7 @@ const emit = defineEmits(['block', 'transact', 'delete'])
             </MenuItem>
             <MenuItem v-slot="{ active }">
               <button
-              @click="emit('delete')"
+                @click="emit('delete')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
                   'group flex w-full items-center rounded-md px-2 py-2 text-sm'

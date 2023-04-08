@@ -14,6 +14,8 @@ import UserMenuOption from '../components/user-menu-option.vue'
 import UserRegistrationModal from '../components/user-registration-modal.vue'
 import UserTransactionModal from '../components/user-transaction-modal.vue'
 
+const currentTransactingUser = ref()
+
 const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
 const showUserRegistrationModal = ref(false)
 const showUserTransactionModal = ref(false)
@@ -23,14 +25,42 @@ const onUserRegistrationFormSubmitted = () => {
   showUserRegistrationModal.value = false
 }
 
-const onUserTransactionFormSubmitted = () => {
+const onUserTransactionFormSubmitted = async (event) => {
+  const user = currentTransactingUser.value
+  try {
+  const res = await fetch(`/api/users/${user.id}/transactions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify({
+      amount: event.amount,
+      type: event.transactionType
+      })
+  })
   mutate()
   showUserTransactionModal.value = false
+  }
+  catch (error) {
+      console.warn(error)
+    }
 }
 
 const block = async (user) => {
   try {
     const res = await fetch(`/api/users/${user.id}/block`, {
+      method: 'POST'
+    })
+    mutate()
+  } catch (error) {
+    console.warn(error)
+  }
+}
+
+const unblock = async (user) => {
+
+  try {
+    const res = await fetch(`/api/users/${user.id}/unblock`, {
       method: 'POST'
     })
     mutate()
@@ -95,13 +125,15 @@ const deleteUser = async (user) => {
     <div class="flex flex-col mt-6">
       <div class="mb-6">
         <UserTransactionModal
-          @submit="onUserTransactionFormSubmitted()"
+          @submit="onUserTransactionFormSubmitted($event)"
+          @cancel="showUserTransactionModal = false"
           v-show="showUserTransactionModal"
         />
       </div>
       <div class="mb-6">
         <UserRegistrationModal
           @submit="onUserRegistrationFormSubmitted()"
+          @cancel="showUserRegistrationModal = false"
           v-show="showUserRegistrationModal"
         />
       </div>
@@ -228,6 +260,13 @@ const deleteUser = async (user) => {
                       </td>
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
                         <div
+                        v-if="user.blocked"
+                          class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
+                        >
+                          Blocked
+                        </div>
+                        <div
+                        v-else
                           class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
                         >
                           Active
@@ -243,8 +282,13 @@ const deleteUser = async (user) => {
 
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
                         <UserMenuOption
+                          :user="user"
                           @block="block(user)"
-                          @transact="initiateTranaction(user)"
+                          @unblock="unblock(user)"
+                          @transact="() => {
+                            initiateTranaction(user)
+                            currentTransactingUser = user
+                          }"
                           @delete="deleteUser(user)"
                         >
                           <button
