@@ -11,10 +11,16 @@ import PlusIcon from '../components/icons/plus.vue'
 import SearchIcon from '../components/icons/search.vue'
 
 import TransactionModal from '../components/transaction-modal.vue'
+import TransactionMenuOption from '../components/transaction-menu-option.vue'
 
 const currentTransaction = ref()
 
-const { data: transactions, mutate, isValidating, error } = useSWRV('/api/transactions')
+const {
+  data: transactions,
+  mutate,
+  isValidating,
+  error
+} = useSWRV('/api/transactions')
 const showTransactionModal = ref(false)
 
 const onTransactionFormSubmitted = async (event) => {
@@ -22,9 +28,21 @@ const onTransactionFormSubmitted = async (event) => {
   showTransactionModal.value = false
 }
 
-const edit = (user) => {
-  currentTransaction.value = user
+const edit = (transaction) => {
+  currentTransaction.value = transaction
   showTransactionModal.value = true
+}
+
+const deleteTransaction = async (transaction) => {
+  try {
+    await fetch(`/api/transactions/${transaction.id}`, {
+      method: 'DELETE'
+    })
+    mutate()
+    }
+    catch (error) {
+        console.warn(error)
+      }
 }
 </script>
 
@@ -36,7 +54,6 @@ const edit = (user) => {
       <h2 class="text-3xl font-medium text-gray-800">Transactions</h2>
       <p class="mt-2 text-sm text-gray-500">Client transactions</p>
     </div>
-
   </section>
   <section class="container px-4 mx-auto">
     <div class="mt-6 md:flex md:items-center md:justify-end">
@@ -134,14 +151,19 @@ const edit = (user) => {
                   <td colspan="6" class="px-4 py-4 text-sm whitespace-nowrap">
                     <div>
                       <h4 class="text-center text-gray-700 dark:text-gray-200">
-                        Sorry, an error occurred while trying to load transactions 🙁
+                        Sorry, an error occurred while trying to load
+                        transactions 🙁
                       </h4>
                     </div>
                   </td>
                 </tr>
                 <template v-else>
-                  <template v-if="Array.isArray(transactions) && transactions.length > 0">
-                    <tr v-for="transaction in transactions">
+                  <template
+                    v-if="
+                      Array.isArray(transactions) && transactions.length > 0
+                    "
+                  >
+                    <tr v-for="transaction in transactions" :key="transaction.id">
                       <td
                         class="px-4 py-4 text-sm font-medium whitespace-nowrap"
                       >
@@ -157,18 +179,18 @@ const edit = (user) => {
                           <h4
                             class="text-left text-gray-700 dark:text-gray-200"
                           >
-                        <div
-                          v-if="transaction.type === 'DEBIT'"
-                          class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
-                        >
-                         DEBIT 
-                        </div>
-                        <div
-                          v-else
-                          class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
-                        >
-                         CREDIT 
-                        </div>
+                            <div
+                              v-if="transaction.type === 'DEBIT'"
+                              class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
+                            >
+                              DEBIT
+                            </div>
+                            <div
+                              v-else
+                              class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
+                            >
+                              CREDIT
+                            </div>
                           </h4>
                         </div>
                       </td>
@@ -177,32 +199,33 @@ const edit = (user) => {
                         class="px-12 py-4 text-sm font-medium whitespace-nowrap"
                       >
                         <div>
-                          <code :class="transaction.type === 'DEBIT' ?  'text-red-500' : 'text-emerald-500'">
-                            {{ transaction.type === "DEBIT" ? "-" : "+"}} {{ transaction.amount }}
+                          <code
+                            :class="
+                              transaction.type === 'DEBIT'
+                                ? 'text-red-500'
+                                : 'text-emerald-500'
+                            "
+                          >
+                            {{ transaction.type === 'DEBIT' ? '-' : '+' }}
+                            {{ transaction.amount }}
                           </code>
                         </div>
                       </td>
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
-                        <div
-                          class="inline px-3 py-1 text-sm font-normal rounded-full gap-x-2 bg-gray-300 dark:bg-gray-800 uppercase"
+                        <div>
+                        <button
+                          class="inline px-3 py-1 text-sm font-normal rounded-full gap-x-2 bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white uppercase"
                         >
-                         DEBIT 
+                          {{transaction.user.account_number}}
+
+                        </button>
                         </div>
                       </td>
 
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
-                        <UserMenuOption
-                          :user="user"
-                          @block="block(user)"
-                          @unblock="unblock(user)"
-                          @edit="edit(user)"
-                          @transact="
-                            () => {
-                              initiateTranaction(user)
-                              currentTransactingUser = user
-                            }
-                          "
-                          @delete="deleteUser(user)"
+                        <TransactionMenuOption
+                          @edit="edit(transaction)"
+                          @delete="deleteTransaction(transaction)"
                         >
                           <button
                             class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
@@ -211,7 +234,7 @@ const edit = (user) => {
                               class="w-6 h-6 group-hover:stroke-blue-700"
                             />
                           </button>
-                        </UserMenuOption>
+                        </TransactionMenuOption>
                       </td>
                     </tr>
                   </template>
@@ -221,7 +244,7 @@ const edit = (user) => {
                         <h4
                           class="text-center text-gray-700 dark:text-gray-200"
                         >
-                          No users found!
+                          No transactions found!
                         </h4>
                       </div>
                     </td>
