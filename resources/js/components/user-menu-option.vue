@@ -48,7 +48,6 @@ const props = defineProps(['user'])
                   aria-hidden="true"
                 />
                 Edit
-
               </button>
             </MenuItem>
             <MenuItem v-slot="{ active }">
