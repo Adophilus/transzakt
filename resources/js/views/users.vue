@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import useSWRV from 'swrv'
+
 import ArrowLongLeft from '../components/icons/arrow-long-left.vue'
 import ArrowLongRight from '../components/icons/arrow-long-right.vue'
 import ArrowLongUp from '../components/icons/arrow-long-up.vue'
@@ -8,9 +10,16 @@ import ElipsisVertical from '../components/icons/elipsis-vertical.vue'
 import PlusIcon from '../components/icons/plus.vue'
 import SearchIcon from '../components/icons/search.vue'
 
+import UserMenu from '../components/user-menu.vue'
 import UserRegistrationModal from '../components/user-registration-modal.vue'
 
+const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
 const showUserRegistrationModal = ref(false)
+
+const onUserRegistrationFormSubmitted = () => {
+  mutate()
+  showUserRegistrationModal.value = false
+}
 </script>
 
 <template>
@@ -52,7 +61,10 @@ const showUserRegistrationModal = ref(false)
 
     <div class="flex flex-col mt-6">
       <div class="mb-6">
-        <UserRegistrationModal v-show="showUserRegistrationModal" />
+        <UserRegistrationModal
+          @submit="onUserRegistrationFormSubmitted()"
+          v-show="showUserRegistrationModal"
+        />
       </div>
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -113,67 +125,107 @@ const showUserRegistrationModal = ref(false)
                   </th>
 
                   <th scope="col" class="relative py-3.5 px-4">
-                    <span class="sr-only">Edit</span>
+                    <span class="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody
                 class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900"
               >
-                <tr>
-                  <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                <tr v-if="!!isValidating && !users">
+                  <td colspan="6" class="px-4 py-4 text-sm whitespace-nowrap">
                     <div>
-                      <h2 class="font-medium text-gray-800 dark:text-white">
-                        First name
-                      </h2>
-                      <p
-                        class="text-sm font-normal text-gray-600 dark:text-gray-400"
-                      >
-                        Last name
-                      </p>
-                    </div>
-                  </td>
-
-                  <td>
-                    <div>
-                      <h4 class="text-left text-gray-700 dark:text-gray-200">
-                        user@email.com
+                      <h4 class="text-center text-gray-700 dark:text-gray-200">
+                        Loading...
                       </h4>
                     </div>
                   </td>
-
-                  <td class="px-12 py-4 text-sm font-medium whitespace-nowrap">
+                </tr>
+                <tr v-else-if="!!error">
+                  <td colspan="6" class="px-4 py-4 text-sm whitespace-nowrap">
                     <div>
-                      <code class="text-gray-700 dark:text-gray-200"
-                        >0123456790</code
-                      >
+                      <h4 class="text-center text-gray-700 dark:text-gray-200">
+                        Sorry, an error occurred while trying to load users 🙁
+                      </h4>
                     </div>
-                  </td>
-                  <td class="px-4 py-4 text-sm whitespace-nowrap">
-                    <div
-                      class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
-                    >
-                      Active
-                    </div>
-                  </td>
-                  <td class="px-4 py-4 text-sm whitespace-nowrap">
-                    <div>
-                      <code class="text-gray-700 dark:text-gray-200"
-                        >$100000</code
-                      >
-                    </div>
-                  </td>
-
-                  <td class="px-4 py-4 text-sm whitespace-nowrap">
-                    <button
-                      class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
-                    >
-                      <ElipsisVertical
-                        class="w-6 h-6 group-hover:stroke-blue-700"
-                      />
-                    </button>
                   </td>
                 </tr>
+                <template v-else>
+                  <template v-if="Array.isArray(users) && users.length > 0">
+                    <tr v-for="user in users">
+                      <td
+                        class="px-4 py-4 text-sm font-medium whitespace-nowrap"
+                      >
+                        <div>
+                          <h2 class="font-medium text-gray-800 dark:text-white">
+                            {{ user.first_name }}
+                          </h2>
+                          <p
+                            class="text-sm font-normal text-gray-600 dark:text-gray-400"
+                          >
+                            {{ user.last_name }}
+                          </p>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div>
+                          <h4
+                            class="text-left text-gray-700 dark:text-gray-200"
+                          >
+                            {{ user.email }}
+                          </h4>
+                        </div>
+                      </td>
+
+                      <td
+                        class="px-12 py-4 text-sm font-medium whitespace-nowrap"
+                      >
+                        <div>
+                          <code class="text-gray-700 dark:text-gray-200">{{
+                            user.account_number
+                          }}</code>
+                        </div>
+                      </td>
+                      <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <div
+                          class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
+                        >
+                          Active
+                        </div>
+                      </td>
+                      <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <div>
+                          <code class="text-gray-700 dark:text-gray-200"
+                            >${{ user.balance }}</code
+                          >
+                        </div>
+                      </td>
+
+                      <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <UserMenu>
+
+                        <button
+                          class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
+                        >
+                          <ElipsisVertical
+                            class="w-6 h-6 group-hover:stroke-blue-700"
+                          />
+                        </button>
+                        </UserMenu>
+                      </td>
+                    </tr>
+                  </template>
+                  <template v-else>
+                    <td colspan="6" class="px-4 py-4 text-sm whitespace-nowrap">
+                      <div>
+                        <h4 class="text-center text-gray-700 dark:text-gray-200">
+                          No users found!
+                        </h4>
+                      </div>
+                    </td>
+                  </template>
+                </template>
               </tbody>
             </table>
           </div>
