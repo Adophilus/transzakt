@@ -10,15 +10,48 @@ import ElipsisVertical from '../components/icons/elipsis-vertical.vue'
 import PlusIcon from '../components/icons/plus.vue'
 import SearchIcon from '../components/icons/search.vue'
 
-import UserMenu from '../components/user-menu.vue'
+import UserMenuOption from '../components/user-menu-option.vue'
 import UserRegistrationModal from '../components/user-registration-modal.vue'
+import UserTransactionModal from '../components/user-transaction-modal.vue'
 
 const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
 const showUserRegistrationModal = ref(false)
+const showUserTransactionModal = ref(false)
 
 const onUserRegistrationFormSubmitted = () => {
   mutate()
   showUserRegistrationModal.value = false
+}
+
+const onUserTransactionFormSubmitted = () => {
+  mutate()
+  showUserTransactionModal.value = false
+}
+
+const block = async (user) => {
+  try {
+    const res = await fetch(`/api/users/${user.id}/block`, {
+      method: 'POST'
+    })
+    mutate()
+  } catch (error) {
+    console.warn(error)
+  }
+}
+
+const initiateTranaction = (user) => {
+  showUserTransactionModal.value = true
+}
+
+const deleteUser = async (user) => {
+  try {
+    const res = await fetch(`/api/users/${user.id}/block`, {
+      method: 'POST'
+    })
+    mutate()
+  } catch (error) {
+    console.warn(error)
+  }
 }
 </script>
 
@@ -60,6 +93,12 @@ const onUserRegistrationFormSubmitted = () => {
     </div>
 
     <div class="flex flex-col mt-6">
+      <div class="mb-6">
+        <UserTransactionModal
+          @submit="onUserTransactionFormSubmitted()"
+          v-show="showUserTransactionModal"
+        />
+      </div>
       <div class="mb-6">
         <UserRegistrationModal
           @submit="onUserRegistrationFormSubmitted()"
@@ -203,23 +242,28 @@ const onUserRegistrationFormSubmitted = () => {
                       </td>
 
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
-                        <UserMenu>
-
-                        <button
-                          class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
+                        <UserMenuOption
+                          @block="block(user)"
+                          @transact="initiateTranaction(user)"
+                          @delete="deleteUser(user)"
                         >
-                          <ElipsisVertical
-                            class="w-6 h-6 group-hover:stroke-blue-700"
-                          />
-                        </button>
-                        </UserMenu>
+                          <button
+                            class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
+                          >
+                            <ElipsisVertical
+                              class="w-6 h-6 group-hover:stroke-blue-700"
+                            />
+                          </button>
+                        </UserMenuOption>
                       </td>
                     </tr>
                   </template>
                   <template v-else>
                     <td colspan="6" class="px-4 py-4 text-sm whitespace-nowrap">
                       <div>
-                        <h4 class="text-center text-gray-700 dark:text-gray-200">
+                        <h4
+                          class="text-center text-gray-700 dark:text-gray-200"
+                        >
                           No users found!
                         </h4>
                       </div>

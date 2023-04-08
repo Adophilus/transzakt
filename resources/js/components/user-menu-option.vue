@@ -1,14 +1,22 @@
 <script setup>
+import { defineEmits } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { ChevronDownIcon, NoSymbolIcon, TrashIcon, CreditCardIcon } from '@heroicons/vue/20/solid'
+import {
+  ChevronDownIcon,
+  NoSymbolIcon,
+  TrashIcon,
+  CreditCardIcon
+} from '@heroicons/vue/20/solid'
+
+const emit = defineEmits(['block', 'transact', 'delete'])
 </script>
 
 <template>
   <div>
-    <Menu as="div" class="relative inline-block">
+    <Menu as="div" class="inline-block">
       <div>
         <MenuButton>
-        <slot></slot>
+          <slot></slot>
         </MenuButton>
       </div>
 
@@ -26,9 +34,10 @@ import { ChevronDownIcon, NoSymbolIcon, TrashIcon, CreditCardIcon } from '@heroi
           <div class="px-1 py-1">
             <MenuItem v-slot="{ active }">
               <button
+              @click="emit('block')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
-                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                  'group flex w-full items-center rounded-md px-2 py-2 text-sm'
                 ]"
               >
                 <NoSymbolIcon
@@ -41,24 +50,10 @@ import { ChevronDownIcon, NoSymbolIcon, TrashIcon, CreditCardIcon } from '@heroi
             </MenuItem>
             <MenuItem v-slot="{ active }">
               <button
+              @click="emit('transact')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
-                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                ]"
-              >
-                <TrashIcon
-                  :active="active"
-                  class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
-                  aria-hidden="true"
-                />
-               Delete 
-              </button>
-            </MenuItem>
-            <MenuItem v-slot="{ active }">
-              <button
-                :class="[
-                  active ? 'bg-blue-600 text-white' : 'text-gray-900',
-                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                  'group flex w-full items-center rounded-md px-2 py-2 text-sm'
                 ]"
               >
                 <CreditCardIcon
@@ -66,7 +61,23 @@ import { ChevronDownIcon, NoSymbolIcon, TrashIcon, CreditCardIcon } from '@heroi
                   class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
                   aria-hidden="true"
                 />
-               Transact
+                Transact
+              </button>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button
+              @click="emit('delete')"
+                :class="[
+                  active ? 'bg-blue-600 text-white' : 'text-gray-900',
+                  'group flex w-full items-center rounded-md px-2 py-2 text-sm'
+                ]"
+              >
+                <TrashIcon
+                  :active="active"
+                  class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
+                  aria-hidden="true"
+                />
+                Delete
               </button>
             </MenuItem>
           </div>

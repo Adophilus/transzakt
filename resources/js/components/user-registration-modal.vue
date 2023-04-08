@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, defineEmits} from 'vue'
-const emit = defineEmits(["submit"])
+import { ref, defineEmits } from 'vue'
+const emit = defineEmits(['submit'])
 
 const firstName = ref()
 const lastName = ref()
@@ -8,31 +8,31 @@ const email = ref()
 const accountNumber = ref()
 
 const submitUserRegistrationDetails = async (event) => {
-      event.preventDefault()
-      const userRegistrationDetails = {
-        firstName: firstName.value.value,
-        lastName: lastName.value.value,
-        email: email.value.value,
-        accountNumber: accountNumber.value.value
-      }
+  event.preventDefault()
+  const userRegistrationDetails = {
+    firstName: firstName.value.value,
+    lastName: lastName.value.value,
+    email: email.value.value,
+    accountNumber: accountNumber.value.value
+  }
 
-      try {
-        const res = await fetch('/api/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(userRegistrationDetails)
-        })
-        firstName.value.value = ''
-        lastName.value.value = ''
-        email.value.value = ''
-        accountNumber.value.value = ''
-        emit('submit')
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  try {
+    const res = await fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userRegistrationDetails)
+    })
+    firstName.value.value = ''
+    lastName.value.value = ''
+    email.value.value = ''
+    accountNumber.value.value = ''
+    emit('submit')
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
@@ -40,7 +40,7 @@ const submitUserRegistrationDetails = async (event) => {
     class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md dark:bg-gray-800"
   >
     <h2 class="text-lg font-semibold text-gray-700 capitalize dark:text-white">
-      Account settings
+      Account details
     </h2>
 
     <form
