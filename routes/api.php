@@ -19,10 +19,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
-Route::post('/users', [App\Http\Controllers\UserController::class, 'create']);
+Route::get('/users', [App\Http\Controllers\UserController::class, 'getUsers']);
+Route::get('/users/{user_id}', [App\Http\Controllers\UserController::class, 'getUserById']);
+Route::post('/users', [App\Http\Controllers\UserController::class, 'createUser']);
+Route::patch('/users/{user_id}', [App\Http\Controllers\UserController::class, 'updateUser']);
 Route::post('/users/{user_id}/transactions', [App\Http\Controllers\UserController::class, 'createTransaction']);
-Route::post('/users/{user_id}/block', [App\Http\Controllers\UserController::class, 'block']);
-Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::class, 'unblock']);
+Route::post('/users/{user_id}/block', [App\Http\Controllers\UserController::class, 'blockUser']);
+Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::class, 'unblockUser']);
 
-Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index']);
+Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'getTransactions']);
+Route::patch('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'getTransactionById']);
