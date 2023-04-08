@@ -5,16 +5,18 @@ const props = defineProps(['current-transaction'])
 
 const transactionType = ref()
 const amount = ref()
+const status = ref()
 
 const submitUserTransactionDetails = async (event) => {
   event.preventDefault()
   const transactionDetails = {
-    transactionType: transactionType.value.value,
-    amount: amount.value.value
+    type: transactionType.value.value,
+    amount: amount.value.value,
+    status: status.value.value
   }
 
   try {
-    const res = await fetch(
+    await fetch(
       `/api/transactions/${props.currentTransaction.id}`,
       {
         method: 'PATCH',
@@ -62,6 +64,33 @@ const submitUserTransactionDetails = async (event) => {
             </option>
             <option :selected="props.currentTransaction?.type === 'DEBIT'">
               DEBIT
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-gray-700 dark:text-gray-200" for="transactionType">
+            Transaction status
+          </label
+          >
+          <select
+            id="status"
+            type="text"
+            required
+            ref="status"
+            class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          >
+            <option :selected="props.currentTransaction?.status === 'PENDING'">
+             PENDING 
+            </option>
+            <option :selected="props.currentTransaction?.status === 'FULFILLED'">
+             FULFILLED 
+            </option>
+            <option :selected="props.currentTransaction?.status === 'CANCELLED'">
+             CANCELLED 
+            </option>
+            <option :selected="props.currentTransaction?.status === 'BLOCKED'">
+             BLOCKED 
             </option>
           </select>
         </div>

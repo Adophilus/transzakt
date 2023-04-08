@@ -36,7 +36,8 @@ const onUserTransactionFormSubmitted = async (event) => {
       },
       body: JSON.stringify({
         amount: event.amount,
-        type: event.transactionType
+        type: event.type,
+        status: event.status
       })
     })
     mutate()

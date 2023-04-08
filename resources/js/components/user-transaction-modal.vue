@@ -4,12 +4,14 @@ const emit = defineEmits(['cancel', 'submit'])
 
 const transactionType = ref()
 const amount = ref()
+const status = ref()
 
 const submitUserTransactionDetails = async (event) => {
   event.preventDefault()
   const userTransactionDetails = {
-    transactionType: transactionType.value.value,
-    amount: amount.value.value
+    type: transactionType.value.value,
+    amount: amount.value.value,
+    status: status.value.value
   }
 
   emit('submit', userTransactionDetails)
@@ -43,6 +45,25 @@ const submitUserTransactionDetails = async (event) => {
           >
             <option>CREDIT</option>
             <option>DEBIT</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-gray-700 dark:text-gray-200" for="transactionType">
+            Transaction status
+          </label
+          >
+          <select
+            id="status"
+            type="text"
+            required
+            ref="status"
+            class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          >
+            <option> PENDING </option>
+            <option> FULFILLED </option>
+            <option> CANCELLED </option>
+            <option> BLOCKED </option>
           </select>
         </div>
 

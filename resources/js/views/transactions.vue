@@ -111,9 +111,15 @@ const deleteTransaction = async (transaction) => {
 
                   <th
                     scope="col"
-                    class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                    class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                   >
                     Type
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                  >
+                   Status 
                   </th>
 
                   <th
@@ -184,17 +190,48 @@ const deleteTransaction = async (transaction) => {
                           >
                             <div
                               v-if="transaction.type === 'DEBIT'"
-                              class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
+                              class="inline px-3 py-1 text-sm font-normal rounded-full text-red-600 gap-x-2 bg-red-200 dark:bg-gray-800 uppercase"
                             >
                               DEBIT
                             </div>
                             <div
                               v-else
-                              class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
+                              class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-600 gap-x-2 bg-emerald-200 dark:bg-gray-800 uppercase"
                             >
                               CREDIT
                             </div>
                           </h4>
+                        </div>
+                      </td>
+
+                      <td
+                        class="px-4 py-4 text-sm text-left font-medium whitespace-nowrap"
+                      >
+                        <div>
+                          <div
+                            v-if="transaction.status === 'BLOCKED'"
+                            class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
+                          >
+                            BLOCKED 
+                          </div>
+                          <div
+                            v-else-if="transaction.status === 'FULFILLED'"
+                              class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-600 gap-x-2 bg-emerald-200 dark:bg-gray-800 uppercase"
+                          >
+                            FULFILLED 
+                          </div>
+                          <div
+                            v-else-if="transaction.status === 'PENDING'"
+                            class="inline px-3 py-1 text-sm font-normal rounded-full text-orange-600 gap-x-2 bg-orange-200 dark:bg-gray-800 uppercase"
+                          >
+                             PENDING 
+                          </div>
+                          <div
+                            v-else-if="transaction.status === 'CANCELLED'"
+                            class="inline px-3 py-1 text-sm font-normal rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white gap-x-2 uppercase"
+                          >
+                            CANCELLED 
+                          </div>
                         </div>
                       </td>
 
@@ -205,8 +242,8 @@ const deleteTransaction = async (transaction) => {
                           <code
                             :class="
                               transaction.type === 'DEBIT'
-                                ? 'text-red-500'
-                                : 'text-emerald-500'
+                                ? 'text-red-600'
+                                : 'text-emerald-600'
                             "
                           >
                             {{ transaction.type === 'DEBIT' ? '-' : '+' }}
