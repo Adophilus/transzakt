@@ -30,4 +30,4 @@ Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::cl
 Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'getTransactions']);
 Route::get('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'getTransactionById']);
 Route::patch('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'updateTransaction']);
-Route::delete('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'deleteTransction']);
+Route::delete('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'deleteTransaction']);
