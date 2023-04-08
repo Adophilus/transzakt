@@ -13,6 +13,7 @@ const submitUserTransactionDetails = async (event) => {
   }
 
   emit('submit', userTransactionDetails)
+  amount.value.value = ''
 }
 </script>
 
@@ -61,10 +62,10 @@ const submitUserTransactionDetails = async (event) => {
 
       <div class="flex gap-x-6 justify-end mt-6">
         <button
-        @click="emit('cancel')"
+          @click="emit('cancel')"
           class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
         >
-         Cancel 
+          Cancel
         </button>
         <button
           type="submit"

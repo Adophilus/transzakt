@@ -28,22 +28,21 @@ const onUserRegistrationFormSubmitted = () => {
 const onUserTransactionFormSubmitted = async (event) => {
   const user = currentTransactingUser.value
   try {
-  const res = await fetch(`/api/users/${user.id}/transactions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json', 
-    },
-    body: JSON.stringify({
-      amount: event.amount,
-      type: event.transactionType
+    const res = await fetch(`/api/users/${user.id}/transactions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: event.amount,
+        type: event.transactionType
       })
-  })
-  mutate()
-  showUserTransactionModal.value = false
+    })
+    mutate()
+    showUserTransactionModal.value = false
+  } catch (error) {
+    console.warn(error)
   }
-  catch (error) {
-      console.warn(error)
-    }
 }
 
 const block = async (user) => {
@@ -58,7 +57,6 @@ const block = async (user) => {
 }
 
 const unblock = async (user) => {
-
   try {
     const res = await fetch(`/api/users/${user.id}/unblock`, {
       method: 'POST'
@@ -260,13 +258,13 @@ const deleteUser = async (user) => {
                       </td>
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
                         <div
-                        v-if="user.blocked"
+                          v-if="user.blocked"
                           class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
                         >
                           Blocked
                         </div>
                         <div
-                        v-else
+                          v-else
                           class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 gap-x-2 bg-emerald-100/60 dark:bg-gray-800 uppercase"
                         >
                           Active
@@ -285,10 +283,12 @@ const deleteUser = async (user) => {
                           :user="user"
                           @block="block(user)"
                           @unblock="unblock(user)"
-                          @transact="() => {
-                            initiateTranaction(user)
-                            currentTransactingUser = user
-                          }"
+                          @transact="
+                            () => {
+                              initiateTranaction(user)
+                              currentTransactingUser = user
+                            }
+                          "
                           @delete="deleteUser(user)"
                         >
                           <button

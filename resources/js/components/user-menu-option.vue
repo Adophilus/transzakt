@@ -5,7 +5,8 @@ import {
   ChevronDownIcon,
   NoSymbolIcon,
   TrashIcon,
-  CreditCardIcon
+  CreditCardIcon,
+  PencilSquareIcon
 } from '@heroicons/vue/20/solid'
 
 const emit = defineEmits(['block', 'unblock', 'transact', 'delete'])
@@ -35,6 +36,23 @@ const props = defineProps(['user'])
           <div class="px-1 py-1">
             <MenuItem v-slot="{ active }">
               <button
+                @click="emit('edit')"
+                :class="[
+                  active ? 'bg-blue-600 text-white' : 'text-gray-900',
+                  'group flex w-full items-center rounded-md px-2 py-2 text-sm'
+                ]"
+              >
+                <PencilSquareIcon
+                  :active="active"
+                  class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
+                  aria-hidden="true"
+                />
+                Edit
+
+              </button>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button
                 @click="props.user.blocked ? emit('unblock') : emit('block')"
                 :class="[
                   active ? 'bg-blue-600 text-white' : 'text-gray-900',
@@ -48,10 +66,11 @@ const props = defineProps(['user'])
                   aria-hidden="true"
                 />
                 <CheckCircleIcon
-                v-show="props.user.blocked"
+                  v-show="props.user.blocked"
                   :active="active"
                   class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
-                  aria-hidden="true" />
+                  aria-hidden="true"
+                />
 
                 {{ props.user.blocked ? 'Unblock' : 'Block' }}
               </button>
