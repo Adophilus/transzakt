@@ -21,7 +21,7 @@ class TransactionController extends Controller
     return response('Transaction not found', 404)->header('Content-Type', 'application/json');
   }
 
-  public function updateTransactionById(Request $request, int $transaction_id)
+  public function updateTransaction(Request $request, int $transaction_id)
   {
     $transaction = Transaction::find($transaction_id);
     $type = $request->input('transactionType');
@@ -49,13 +49,22 @@ class TransactionController extends Controller
           $transaction->user()->increment('balance', $transaction->amount + $amount);
         }
       }
-      $transaction->user()->balance()->increment($amount);
       $transaction->update([
         "type" => $type,
         "amount" => $amount
       ]);
-      return response($transaction, 200)->header('Content-Type', 'application/json');
+      return response("Transaction updated successfully", 204)->header('Content-Type', 'application/json');
     }
     return response('Transaction not found', 404)->header('Content-Type', 'application/json');
+  }
+
+  public function deleteTransaction(int $transaction_id)
+  {
+    $transaction = Transaction::find($transaction_id);
+    if ($transaction) {
+      $transaction->delete();
+      return response("Transaction deleted successfully", 204)->header('Content-Type', 'application/json');
+    }
+    return response("Transaction not found", 404)->header('Content-Type', 'application/json');
   }
 }
