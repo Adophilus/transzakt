@@ -9,7 +9,8 @@ class TransactionController extends Controller
 {
   public function getTransactions()
   {
-    return response(Transaction::all(), 200)->header('Content-Type', 'application/json');
+    $transactions = Transaction::with('user')->get();
+    return response($transactions, 200)->header('Content-Type', 'application/json');
   }
 
   public function getTransactionById(int $id)
