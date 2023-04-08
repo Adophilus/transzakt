@@ -24,8 +24,9 @@ class TransactionController extends Controller
   public function updateTransaction(Request $request, int $transaction_id)
   {
     $transaction = Transaction::find($transaction_id);
-    $type = $request->input('transactionType');
+    $type = $request->input('type');
     $amount = $request->input('amount');
+    $status = $request->input('status');
 
     if ($transaction) {
       if ($transaction->type === "CREDIT") {
@@ -51,7 +52,8 @@ class TransactionController extends Controller
       }
       $transaction->update([
         "type" => $type,
-        "amount" => $amount
+        "amount" => $amount,
+        "status" => $status
       ]);
       return response("Transaction updated successfully", 204)->header('Content-Type', 'application/json');
     }

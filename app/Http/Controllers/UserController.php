@@ -74,12 +74,14 @@ class UserController extends Controller
   public function createTransaction(Request $request, int $user_id)
   {
     $type = $request->input('type');
+    $status = $request->input('status');
     $amount = $request->input('amount');
 
     Transaction::create([
       "user_id" => $user_id,
       "type" => $type,
-      "amount" => $amount
+      "amount" => $amount,
+      "status" => $status
     ]);
 
     if ($type === "CREDIT") {
