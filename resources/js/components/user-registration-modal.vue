@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
 const emit = defineEmits(['submit'])
+const props = defineProps(['current-user'])
 
 const firstName = ref()
 const lastName = ref()
 const email = ref()
 const accountNumber = ref()
-const balance = ref(0)
+const balance = ref()
 
 const submitUserRegistrationDetails = async (event) => {
   event.preventDefault()
@@ -19,13 +20,24 @@ const submitUserRegistrationDetails = async (event) => {
   }
 
   try {
-    const res = await fetch('/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userRegistrationDetails)
-    })
+    let res
+    if (!!props.currentUser) {
+      res = await fetch(`/api/users/${props.currentUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userRegistrationDetails)
+      })
+    } else {
+      await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userRegistrationDetails)
+      })
+    }
     firstName.value.value = ''
     lastName.value.value = ''
     email.value.value = ''
@@ -60,6 +72,7 @@ const submitUserRegistrationDetails = async (event) => {
             type="text"
             required
             ref="firstName"
+            :value="props.currentUser?.first_name ?? ''"
             class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           />
         </div>
@@ -73,6 +86,7 @@ const submitUserRegistrationDetails = async (event) => {
             type="text"
             required
             ref="lastName"
+            :value="props.currentUser?.last_name ?? ''"
             class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           />
         </div>
@@ -86,6 +100,7 @@ const submitUserRegistrationDetails = async (event) => {
             type="email"
             required
             ref="email"
+            :value="props.currentUser?.email ?? ''"
             class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           />
         </div>
@@ -99,6 +114,7 @@ const submitUserRegistrationDetails = async (event) => {
             type="text"
             required
             ref="accountNumber"
+            :value="props.currentUser?.account_number ?? ''"
             class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           />
         </div>
@@ -111,6 +127,7 @@ const submitUserRegistrationDetails = async (event) => {
             type="number"
             required
             ref="balance"
+            :value="props.currentUser?.balance ?? 0"
             class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           />
         </div>
