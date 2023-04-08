@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('amount');
             $table->enum('type', ['CREDIT', 'DEBIT']);
+            $table->enum('status', ['FULFILLED', 'PENDING', 'CANCELLED', 'BLOCKED'])->default('PENDING');
             $table->timestamps();
         });
     }
