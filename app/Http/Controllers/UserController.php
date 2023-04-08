@@ -8,12 +8,21 @@ use App\Models\Transaction;
 
 class UserController extends Controller
 {
-  public function index()
+  public function getUsers()
   {
     return response(User::all(), 200)->header('Content-Type', 'application/json');
   }
 
-  public function create(Request $request)
+  public function getUserById(int $user_id)
+  {
+    if ($user = User::find($user_id)) {
+      return response($user, 200)->header('Content-Type', 'application/json');
+    } else {
+      return response('User not found', 404)->header('Content-Type', 'application/json');
+    }
+  }
+
+  public function createUser(Request $request)
   {
     $first_name = $request->input("firstName");
     $last_name = $request->input("lastName");
@@ -56,7 +65,7 @@ class UserController extends Controller
     ], 201)->header('Content-Type', 'application/json');
   }
 
-  public function block(Request $request, int $user_id)
+  public function blockUser(int $user_id)
   {
     User::find($user_id)->update([
       "blocked" => true
@@ -67,7 +76,7 @@ class UserController extends Controller
     ], 204)->header('Content-Type', 'application/json');
   }
 
-  public function unblock(Request $request, int $user_id)
+  public function unblockUser(int $user_id)
   {
     User::find($user_id)->update([
       "blocked" => false
