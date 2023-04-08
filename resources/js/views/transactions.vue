@@ -12,6 +12,7 @@ import SearchIcon from '../components/icons/search.vue'
 
 import TransactionModal from '../components/transaction-modal.vue'
 import TransactionMenuOption from '../components/transaction-menu-option.vue'
+import UserDetailsTooltip from '../components/user-details-tooltip.vue'
 
 const currentTransaction = ref()
 
@@ -39,10 +40,9 @@ const deleteTransaction = async (transaction) => {
       method: 'DELETE'
     })
     mutate()
-    }
-    catch (error) {
-        console.warn(error)
-      }
+  } catch (error) {
+    console.warn(error)
+  }
 }
 </script>
 
@@ -163,7 +163,10 @@ const deleteTransaction = async (transaction) => {
                       Array.isArray(transactions) && transactions.length > 0
                     "
                   >
-                    <tr v-for="transaction in transactions" :key="transaction.id">
+                    <tr
+                      v-for="transaction in transactions"
+                      :key="transaction.id"
+                    >
                       <td
                         class="px-4 py-4 text-sm font-medium whitespace-nowrap"
                       >
@@ -213,11 +216,13 @@ const deleteTransaction = async (transaction) => {
                       </td>
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
                         <div class="flex justify-center">
-                        <button
-                          class="inline px-3 py-1 text-sm font-normal rounded-full gap-x-2 bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white uppercase"
-                        >
-                          {{transaction.user.account_number}}
-                        </button>
+                          <UserDetailsTooltip :user="transaction.user">
+                            <button
+                              class="inline px-3 py-1 text-sm font-normal rounded-full gap-x-2 bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white uppercase"
+                            >
+                              {{ transaction.user.account_number }}
+                            </button>
+                          </UserDetailsTooltip>
                         </div>
                       </td>
 
