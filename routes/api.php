@@ -28,4 +28,6 @@ Route::post('/users/{user_id}/block', [App\Http\Controllers\UserController::clas
 Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::class, 'unblockUser']);
 
 Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'getTransactions']);
-Route::patch('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'getTransactionById']);
+Route::get('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'getTransactionById']);
+Route::patch('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'updateTransaction']);
+Route::delete('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'deleteTransction']);
