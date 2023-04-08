@@ -42,13 +42,13 @@ const props = defineProps(['user'])
                 ]"
               >
                 <NoSymbolIcon
-                  v-if="props.user.blocked"
+                  v-show="!props.user.blocked"
                   :active="active"
                   class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
                   aria-hidden="true"
                 />
                 <CheckCircleIcon
-                v-else
+                v-show="props.user.blocked"
                   :active="active"
                   class="mr-2 h-5 w-5 text-blue-600 group-hover:text-white"
                   aria-hidden="true" />
