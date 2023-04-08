@@ -228,7 +228,7 @@ const deleteUser = async (user) => {
                 </tr>
                 <template v-else>
                   <template v-if="Array.isArray(users) && users.length > 0">
-                    <tr v-for="user in users">
+                    <tr v-for="user in users" :key="user.id">
                       <td
                         class="px-4 py-4 text-sm font-medium whitespace-nowrap"
                       >
