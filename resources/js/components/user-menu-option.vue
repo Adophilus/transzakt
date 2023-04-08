@@ -16,7 +16,7 @@ const props = defineProps(['user'])
 
 <template>
   <div>
-    <Menu as="div" class="inline-block">
+    <Menu as="div" class="relative inline-block">
       <div>
         <MenuButton>
           <slot></slot>

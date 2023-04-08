@@ -118,14 +118,14 @@ const deleteTransaction = async (transaction) => {
 
                   <th
                     scope="col"
-                    class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                    class="px-4 py-3.5 text-sm font-normal text-right rtl:text-right text-gray-500 dark:text-gray-400"
                   >
                     Amount
                   </th>
 
                   <th
                     scope="col"
-                    class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                    class="px-4 py-3.5 text-sm font-normal text-center rtl:text-center text-gray-500 dark:text-gray-400"
                   >
                     User
                   </th>
@@ -174,7 +174,7 @@ const deleteTransaction = async (transaction) => {
                         </div>
                       </td>
 
-                      <td>
+                      <td class="px-4 py-4 text-sm whitespace-nowrap">
                         <div>
                           <h4
                             class="text-left text-gray-700 dark:text-gray-200"
@@ -196,7 +196,7 @@ const deleteTransaction = async (transaction) => {
                       </td>
 
                       <td
-                        class="px-12 py-4 text-sm font-medium whitespace-nowrap"
+                        class="px-4 py-4 text-sm text-right font-medium whitespace-nowrap"
                       >
                         <div>
                           <code
@@ -212,12 +212,11 @@ const deleteTransaction = async (transaction) => {
                         </div>
                       </td>
                       <td class="px-4 py-4 text-sm whitespace-nowrap">
-                        <div>
+                        <div class="flex justify-center">
                         <button
                           class="inline px-3 py-1 text-sm font-normal rounded-full gap-x-2 bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white uppercase"
                         >
                           {{transaction.user.account_number}}
-
                         </button>
                         </div>
                       </td>
