@@ -19,7 +19,10 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@headlessui/vue": "^1.7.12",
+        "@heroicons/vue": "^2.0.17",
         "chart.js": "^4.2.1",
+        "swrv": "^1.0.3",
         "vue": "^3.2.47",
         "vue-router": "^4.1.6"
     }
