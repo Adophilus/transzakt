@@ -3,6 +3,7 @@ import { defineEmits, defineProps } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import {
   ChevronDownIcon,
+  CheckCircleIcon,
   NoSymbolIcon,
   TrashIcon,
   CreditCardIcon,
