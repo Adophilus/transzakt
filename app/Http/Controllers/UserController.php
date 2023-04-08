@@ -43,6 +43,33 @@ class UserController extends Controller
     ], 201)->header('Content-Type', 'application/json');
   }
 
+  public function updateUser(Request $request, int $user_id)
+  {
+    $first_name = $request->input("firstName");
+    $last_name = $request->input("lastName");
+    $email = $request->input("email");
+    $balance = $request->input("balance");
+    $account_number = $request->input("accountNumber");
+
+    $user = User::find($user_id);
+
+    if ($first_name)
+      $user->first_name = $first_name;
+    if ($last_name)
+      $user->last_name = $last_name;
+    if ($email)
+      $user->email = $email;
+    if ($balance)
+      $user->balance = $balance;
+    if ($account_number)
+      $user->account_number = $account_number;
+    $user->save();
+
+    return response([
+      "message" => "User updated successfully",
+    ], 200)->header('Content-Type', 'application/json');
+  }
+
   public function createTransaction(Request $request, int $user_id)
   {
     $type = $request->input('type');
