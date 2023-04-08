@@ -15,6 +15,7 @@ import UserRegistrationModal from '../components/user-registration-modal.vue'
 import UserTransactionModal from '../components/user-transaction-modal.vue'
 
 const currentTransactingUser = ref()
+const currentEditingUser = ref()
 
 const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
 const showUserRegistrationModal = ref(false)
@@ -65,6 +66,11 @@ const unblock = async (user) => {
   } catch (error) {
     console.warn(error)
   }
+}
+
+const edit = (user) => {
+  currentEditingUser.value = user
+  showUserRegistrationModal.value = true
 }
 
 const initiateTranaction = (user) => {
@@ -132,6 +138,7 @@ const deleteUser = async (user) => {
         <UserRegistrationModal
           @submit="onUserRegistrationFormSubmitted()"
           @cancel="showUserRegistrationModal = false"
+          :current-user="currentEditingUser"
           v-show="showUserRegistrationModal"
         />
       </div>
@@ -283,6 +290,7 @@ const deleteUser = async (user) => {
                           :user="user"
                           @block="block(user)"
                           @unblock="unblock(user)"
+                          @edit="edit(user)"
                           @transact="
                             () => {
                               initiateTranaction(user)
