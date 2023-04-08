@@ -9,7 +9,7 @@ class TransactionController extends Controller
 {
   public function getTransactions()
   {
-    $transactions = Transaction::with('user')->get();
+    $transactions = Transaction::with('user')->orderBy('created_at', 'desc')->get();
     return response($transactions, 200)->header('Content-Type', 'application/json');
   }
 
@@ -62,6 +62,11 @@ class TransactionController extends Controller
   {
     $transaction = Transaction::find($transaction_id);
     if ($transaction) {
+      if ($transaction->type === 'CREDIT') {
+        $transaction->user()->decrement('balance', $transaction->amount);
+      } else {
+        $transaction->user()->increment('balance', $transaction->amount);
+      }
       $transaction->delete();
       return response("Transaction deleted successfully", 204)->header('Content-Type', 'application/json');
     }

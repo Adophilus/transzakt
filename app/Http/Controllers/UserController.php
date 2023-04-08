@@ -10,7 +10,8 @@ class UserController extends Controller
 {
   public function getUsers()
   {
-    return response(User::all(), 200)->header('Content-Type', 'application/json');
+    $users = User::orderBy('first_name', 'DESC')->get();
+    return response($users, 200)->header('Content-Type', 'application/json');
   }
 
   public function getUserById(int $user_id)
