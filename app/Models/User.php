@@ -23,6 +23,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'account_number',
+        'password',
         'blocked',
         'balance'
     ];
@@ -49,5 +50,16 @@ class User extends Authenticatable
     public function transactions(): BelongsTo
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    /**
+     * Always encrypt the password when it is updated.
+     *
+     * @param $value
+     * @return string
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 }

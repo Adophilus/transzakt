@@ -13,10 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/dashboard');
-});
+// Route::get('/', function () {
+//     return redirect('/dashboard');
+// });
+
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
 
 Route::get('{path}', function () {
     return view('index');
-})->where('path', '(dashboard|users|settings|transactions)');
+})->where('path', '(dashboard|users|settings|transactions)')->name('dashboard');
