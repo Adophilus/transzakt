@@ -11,7 +11,9 @@ const props = defineProps(['isOpen'])
 <template>
   <aside
     id="sidebar"
-    :class="props.isOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'"
+    :class="
+      props.isOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'
+    "
     class="fixed inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform bg-gray-800 lg:translate-x-0 lg:relative lg:inset-0"
   >
     <div class="flex flex-col items-center flex-1 space-y-6">

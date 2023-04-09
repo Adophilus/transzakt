@@ -9,7 +9,7 @@ class TransactionController extends Controller
 {
   public function getTransactions()
   {
-    $transactions = Transaction::with('user')->orderBy('created_at', 'desc')->get();
+    $transactions = Transaction::with('user')->orderBy('created_at', 'DESC')->get();
     return response($transactions, 200)->header('Content-Type', 'application/json');
   }
 

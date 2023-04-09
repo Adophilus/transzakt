@@ -12,7 +12,7 @@ class UserController extends Controller
 {
   public function getUsers()
   {
-    $users = User::orderBy('first_name', 'DESC')->get();
+    $users = User::orderBy('first_name', 'ASC')->get();
     return response($users, 200)->header('Content-Type', 'application/json');
   }
 
