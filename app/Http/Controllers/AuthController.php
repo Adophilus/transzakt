@@ -4,10 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+  public function resetPassword(Request $request)
+  {
+    $validated = $request->validate([
+      'otp' => ['required', 'digits:6'],
+      'user_id' => ['required'],
+      'password' => ['required'],
+      'confirm_password' => ['required', 'same:password'],
+    ]);
+    Log::debug($validated);
+    return back();
+  }
+
   public function login(Request $request)
   {
     $credentials = $request->validate([
