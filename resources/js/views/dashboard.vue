@@ -10,7 +10,7 @@ const showSidebar = ref(false)
   <div class="relative min-h-screen lg:flex">
     <header class="text-gray-100 bg-gray-800 lg:hidden">
       <div class="container flex items-center justify-between p-4 mx-auto">
-        <a href="#" class="text-white">
+        <router-link to="/dashboard" class="text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-8 h-8"
@@ -25,7 +25,7 @@ const showSidebar = ref(false)
               d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
             />
           </svg>
-        </a>
+        </router-link>
 
         <button
           @click="showSidebar = !showSidebar"
