@@ -1,7 +1,9 @@
 <script setup>
+import { ref } from 'vue'
 import Navbar from '../components/navbar.vue'
 import Sidebar from '../components/sidebar.vue'
-import UserIcon from '../components/icons/user.vue'
+
+const showSidebar = ref(false)
 </script>
 
 <template>
@@ -26,11 +28,11 @@ import UserIcon from '../components/icons/user.vue'
         </a>
 
         <button
-          @click="isOpen = !isOpen"
+          @click="showSidebar = !showSidebar"
           class="p-2 text-white rounded-lg focus:outline-none hover:bg-gray-700"
         >
           <svg
-            v-show="!isOpen"
+            v-show="!showSidebar"
             xmlns="http://www.w3.org/2000/svg"
             class="w-6 h-6"
             fill="none"
@@ -46,7 +48,7 @@ import UserIcon from '../components/icons/user.vue'
           </svg>
 
           <svg
-            v-show="isOpen"
+            v-show="showSidebar"
             class="w-6 h-6 transition duration-200 ease-in-out"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -66,12 +68,12 @@ import UserIcon from '../components/icons/user.vue'
 
     <div
       v-cloak
-      :class="isOpen ? 'block' : 'hidden'"
-      @click="isOpen = false"
+      :class="showSidebar ? 'block' : 'hidden'"
+      @click="showSidebar = false"
       class="fixed inset-0 z-20 transition-opacity bg-black opacity-30 lg:hidden"
     ></div>
 
-    <Sidebar />
+    <Sidebar :isOpen="showSidebar" />
     <main
       id="content"
       class="flex-1 pb-12 space-y-6 overflow-y-auto bg-gray-100 lg:h-screen md:space-y-8"
