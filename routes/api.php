@@ -18,7 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('api.login');
+Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPassword'])->name('api.reset-password');
 
 Route::get('/users', [App\Http\Controllers\UserController::class, 'getUsers']);
 Route::get('/users/{user_id}', [App\Http\Controllers\UserController::class, 'getUserById']);
