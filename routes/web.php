@@ -22,7 +22,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/account/reset-password', function () {
-    return view('reser-password');
+    return view('reset-password');
 })->name('reset-password');
 
 Route::get('{path}', function () {
