@@ -119,7 +119,7 @@ const deleteTransaction = async (transaction) => {
                     scope="col"
                     class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                   >
-                   Status 
+                    Status
                   </th>
 
                   <th
@@ -212,25 +212,25 @@ const deleteTransaction = async (transaction) => {
                             v-if="transaction.status === 'BLOCKED'"
                             class="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60 dark:bg-gray-800 uppercase"
                           >
-                            BLOCKED 
+                            BLOCKED
                           </div>
                           <div
                             v-else-if="transaction.status === 'FULFILLED'"
-                              class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-600 gap-x-2 bg-emerald-200 dark:bg-gray-800 uppercase"
+                            class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-600 gap-x-2 bg-emerald-200 dark:bg-gray-800 uppercase"
                           >
-                            FULFILLED 
+                            FULFILLED
                           </div>
                           <div
                             v-else-if="transaction.status === 'PENDING'"
                             class="inline px-3 py-1 text-sm font-normal rounded-full text-orange-600 gap-x-2 bg-orange-200 dark:bg-gray-800 uppercase"
                           >
-                             PENDING 
+                            PENDING
                           </div>
                           <div
                             v-else-if="transaction.status === 'CANCELLED'"
                             class="inline px-3 py-1 text-sm font-normal rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white gap-x-2 uppercase"
                           >
-                            CANCELLED 
+                            CANCELLED
                           </div>
                         </div>
                       </td>

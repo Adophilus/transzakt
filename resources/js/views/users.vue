@@ -13,13 +13,16 @@ import SearchIcon from '../components/icons/search.vue'
 import UserMenuOption from '../components/user-menu-option.vue'
 import UserRegistrationModal from '../components/user-registration-modal.vue'
 import UserTransactionModal from '../components/user-transaction-modal.vue'
+import DeleteUserModalVue from '../components/delete-user-modal.vue'
 
 const currentTransactingUser = ref()
 const currentEditingUser = ref()
+const currentDeletingUser = ref()
 
 const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
 const showUserRegistrationModal = ref(false)
 const showUserTransactionModal = ref(false)
+const showUserDeletingModal = ref(false)
 
 const onUserRegistrationFormSubmitted = () => {
   mutate()
@@ -49,7 +52,7 @@ const onUserTransactionFormSubmitted = async (event) => {
 
 const block = async (user) => {
   try {
-    const res = await fetch(`/api/users/${user.id}/block`, {
+    await fetch(`/api/users/${user.id}/block`, {
       method: 'POST'
     })
     mutate()
@@ -60,7 +63,7 @@ const block = async (user) => {
 
 const unblock = async (user) => {
   try {
-    const res = await fetch(`/api/users/${user.id}/unblock`, {
+    await fetch(`/api/users/${user.id}/unblock`, {
       method: 'POST'
     })
     mutate()
@@ -80,17 +83,28 @@ const initiateTranaction = (user) => {
 
 const deleteUser = async (user) => {
   try {
-    const res = await fetch(`/api/users/${user.id}`, {
+    await fetch(`/api/users/${user.id}`, {
       method: 'DELETE'
     })
     mutate()
+    showUserDeletingModal.value = false
   } catch (error) {
     console.warn(error)
   }
 }
+
+const onDeleteUser = (user) => {
+  currentDeletingUser.value = user
+  showUserDeletingModal.value = true
+}
 </script>
 
 <template>
+  <DeleteUserModalVue
+    :isOpen="showUserDeletingModal"
+    @accept="deleteUser(currentDeletingUser)"
+    @cancel="showUserDeletingModal = false"
+  />
   <section
     class="flex flex-col w-full px-6 md:justify-between md:items-center md:flex-row"
   >
@@ -298,7 +312,7 @@ const deleteUser = async (user) => {
                               currentTransactingUser = user
                             }
                           "
-                          @delete="deleteUser(user)"
+                          @delete="onDeleteUser(user)"
                         >
                           <button
                             class="group px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100"
