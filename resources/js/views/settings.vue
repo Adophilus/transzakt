@@ -80,8 +80,8 @@ const initiateTranaction = (user) => {
 
 const deleteUser = async (user) => {
   try {
-    const res = await fetch(`/api/users/${user.id}`, {
-      method: 'DELETE'
+    const res = await fetch(`/api/users/${user.id}/block`, {
+      method: 'POST'
     })
     mutate()
   } catch (error) {
