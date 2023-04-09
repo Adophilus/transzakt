@@ -20,11 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 
-
 Route::get('/users', [App\Http\Controllers\UserController::class, 'getUsers']);
 Route::get('/users/{user_id}', [App\Http\Controllers\UserController::class, 'getUserById']);
 Route::post('/users', [App\Http\Controllers\UserController::class, 'createUser']);
 Route::patch('/users/{user_id}', [App\Http\Controllers\UserController::class, 'updateUser']);
+Route::delete('/users/{user_id}', [App\Http\Controllers\UserController::class, 'deleteUser']);
 Route::post('/users/{user_id}/transactions', [App\Http\Controllers\UserController::class, 'createTransaction']);
 Route::post('/users/{user_id}/block', [App\Http\Controllers\UserController::class, 'blockUser']);
 Route::post('/users/{user_id}/unblock', [App\Http\Controllers\UserController::class, 'unblockUser']);
