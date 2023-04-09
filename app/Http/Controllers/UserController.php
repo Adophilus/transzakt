@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Mail\ResetPassword;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -14,7 +16,7 @@ class UserController extends Controller
     return response($users, 200)->header('Content-Type', 'application/json');
   }
 
-  public function getUserById(int $user_id)
+  public function getUserById(string $user_id)
   {
     if ($user = User::find($user_id)) {
       return response($user, 200)->header('Content-Type', 'application/json');
@@ -31,20 +33,23 @@ class UserController extends Controller
     $balance = $request->input("balance");
     $account_number = $request->input("accountNumber");
 
-    User::create([
+    $user = User::create([
       "first_name" => $first_name,
       "last_name" => $last_name,
       "email" => $email,
       "balance" => $balance,
       "account_number" => $account_number,
+      "otp" => rand(100000, 999999)
     ]);
+
+    Mail::to($user->email)->send(new ResetPassword($user));
 
     return response([
       "message" => "User created successfully",
     ], 201)->header('Content-Type', 'application/json');
   }
 
-  public function updateUser(Request $request, int $user_id)
+  public function updateUser(Request $request, string $user_id)
   {
     $first_name = $request->input("firstName");
     $last_name = $request->input("lastName");
@@ -71,7 +76,23 @@ class UserController extends Controller
     ], 200)->header('Content-Type', 'application/json');
   }
 
-  public function createTransaction(Request $request, int $user_id)
+  public function deleteUser(string $user_id)
+  {
+    $user = User::find($user_id);
+    if ($user) {
+      Transaction::where('user_id', $user_id)->delete();
+      $user->delete();
+      return response([
+        "message" => "User deleted successfully",
+      ], 200)->header('Content-Type', 'application/json');
+    } else {
+      return response([
+        "message" => "User not found",
+      ], 404)->header('Content-Type', 'application/json');
+    }
+  }
+
+  public function createTransaction(Request $request, string $user_id)
   {
     $type = $request->input('type');
     $status = $request->input('status');
@@ -95,7 +116,7 @@ class UserController extends Controller
     ], 201)->header('Content-Type', 'application/json');
   }
 
-  public function blockUser(int $user_id)
+  public function blockUser(string $user_id)
   {
     User::find($user_id)->update([
       "blocked" => true
@@ -106,7 +127,7 @@ class UserController extends Controller
     ], 204)->header('Content-Type', 'application/json');
   }
 
-  public function unblockUser(int $user_id)
+  public function unblockUser(string $user_id)
   {
     User::find($user_id)->update([
       "blocked" => false

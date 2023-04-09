@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -23,9 +24,9 @@ class User extends Authenticatable
         'last_name',
         'email',
         'account_number',
-        'password',
         'blocked',
-        'balance'
+        'balance',
+        'otp'
     ];
 
     /**
@@ -52,12 +53,6 @@ class User extends Authenticatable
         return $this->belongsTo(Transaction::class);
     }
 
-    /**
-     * Always encrypt the password when it is updated.
-     *
-     * @param $value
-     * @return string
-     */
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

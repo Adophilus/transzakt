@@ -20,7 +20,10 @@ return new class extends Migration
             $table->string('account_number')->unique();
             $table->boolean('blocked')->default(false);
             $table->integer('balance')->default(0);
+            $table->boolean('isAdmin')->default(false);
+            $table->integer('otp')->default(false);
             $table->timestamp('email_verified_at')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
             $table->primary('id');
