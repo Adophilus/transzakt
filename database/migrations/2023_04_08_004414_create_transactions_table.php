@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->integer('amount');
             $table->enum('type', ['CREDIT', 'DEBIT']);
             $table->enum('status', ['FULFILLED', 'PENDING', 'CANCELLED', 'BLOCKED'])->default('PENDING');
+
             $table->timestamps();
+            $table->primary('id');
         });
     }
 
