@@ -17,6 +17,11 @@ const submitUserTransactionDetails = async (event) => {
   emit('submit', userTransactionDetails)
   amount.value.value = ''
 }
+
+const cancelTransaction = (event) => {
+  event.preventDefault()
+  emit('cancel')
+}
 </script>
 
 <template>
@@ -82,7 +87,7 @@ const submitUserTransactionDetails = async (event) => {
 
       <div class="flex gap-x-6 justify-end mt-6">
         <button
-          @click="emit('cancel')"
+          @click="cancelTransaction($event)"
           class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
         >
           Cancel
