@@ -7,14 +7,12 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
   public function getUsers()
   {
     $users = User::orderBy('first_name', 'ASC')->cursorPaginate();
-    Log::debug($users);
     return response($users, 200)->header('Content-Type', 'application/json');
   }
 
