@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import useSWRV from 'swrv'
 
 import ArrowLongLeft from '../components/icons/arrow-long-left.vue'
@@ -7,24 +8,36 @@ import ArrowLongRight from '../components/icons/arrow-long-right.vue'
 import ArrowLongUp from '../components/icons/arrow-long-up.vue'
 import ArrowLongDown from '../components/icons/arrow-long-down.vue'
 import ElipsisVertical from '../components/icons/elipsis-vertical.vue'
-import PlusIcon from '../components/icons/plus.vue'
 import SearchIcon from '../components/icons/search.vue'
 
 import TransactionModal from '../components/transaction-modal.vue'
 import TransactionMenuOption from '../components/transaction-menu-option.vue'
 import UserDetailsTooltip from '../components/user-details-tooltip.vue'
 
+const route = useRoute()
+
 const currentTransaction = ref()
-
-const {
-  data: transactions,
-  mutate,
-  isValidating,
-  error
-} = useSWRV('/api/transactions')
 const showTransactionModal = ref(false)
+const transactionsApiUrl = ref('/api/transactions')
 
-const onTransactionFormSubmitted = async (event) => {
+watch(
+  () => route.query.cursor,
+  () => {
+    const url = new URL(transactionsApiUrl.value, window.location.origin)
+    if (route.query.cursor) {
+      url.searchParams.set('cursor', route.query.cursor)
+    }
+    transactionsApiUrl.value = url.toString()
+    console.log(transactionsApiUrl)
+  }
+)
+
+const { data, mutate, isValidating, error } = useSWRV(
+  () => transactionsApiUrl.value
+)
+const transactions = computed(() => data.value?.data)
+
+const onTransactionFormSubmitted = async () => {
   mutate()
   showTransactionModal.value = false
 }
@@ -177,9 +190,21 @@ const deleteTransaction = async (transaction) => {
                         class="px-4 py-4 text-sm font-medium whitespace-nowrap"
                       >
                         <div>
-                          <h4 class="font-medium text-gray-800 dark:text-white">
-                            {{ transaction.id }}
-                          </h4>
+                          <div class="relative inline-block group">
+                            <h4
+                              class="font-medium text-gray-800 dark:text-white"
+                            >
+                              ...{{
+                                transaction.id.slice(
+                                  transaction.id.length - 5,
+                                  transaction.id.length
+                                )
+                              }}
+                            </h4>
+                            <div class="absolute hidden group-hover:flex items-center p-3 text-gray-600 -translate-x-1/2 bg-white rounded-lg drop-shadow-lg -top-16 left-1/2 dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+                              <p class="text-xs">{{ transaction.id }}</p>
+                            </div>
+                          </div>
                         </div>
                       </td>
 
@@ -298,29 +323,33 @@ const deleteTransaction = async (transaction) => {
       </div>
     </div>
 
-    <div class="mt-6 sm:flex sm:items-center sm:justify-between">
-      <div class="text-sm text-gray-800">
-        Page <span class="font-medium text-gray-700">1 of 10</span>
-      </div>
-
+    <div class="mt-6 sm:flex sm:items-center sm:justify-end">
       <div class="flex items-center mt-4 gap-x-4 sm:mt-0">
-        <a
-          href="#"
+        <router-link
+          :to="{
+            name: 'admin-transactions',
+            query: { cursor: data?.prev_cursor }
+          }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
+          v-show="!!data?.prev_cursor"
         >
           <ArrowLongLeft class="w-6 h-6" />
 
-          <span> previous </span>
-        </a>
+          <span> Previous </span>
+        </router-link>
 
-        <a
-          href="#"
+        <router-link
+          :to="{
+            name: 'admin-transactions',
+            query: { cursor: data?.next_cursor }
+          }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
+          v-show="!!data?.next_cursor"
         >
           <span> Next </span>
 
           <ArrowLongRight class="w-6 h-6" />
-        </a>
+        </router-link>
       </div>
     </div>
   </section>

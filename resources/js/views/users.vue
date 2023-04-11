@@ -23,13 +23,16 @@ const currentEditingUser = ref()
 const currentDeletingUser = ref()
 const usersApiUrl = ref('/api/users')
 
-watch(() => route.query.cursor, () => {
-  const url = new URL(usersApiUrl.value, window.location.origin)
-  if (route.query.cursor) {
-    url.searchParams.set('cursor', route.query.cursor)
+watch(
+  () => route.query.cursor,
+  () => {
+    const url = new URL(usersApiUrl.value, window.location.origin)
+    if (route.query.cursor) {
+      url.searchParams.set('cursor', route.query.cursor)
+    }
+    usersApiUrl.value = url.toString()
   }
-  usersApiUrl.value = url.toString()
-})
+)
 
 const { data, mutate, isValidating, error } = useSWRV(() => usersApiUrl.value)
 

@@ -22,7 +22,7 @@ const routes = [
       },
       {
         path: 'transactions',
-        name: 'transactions',
+        name: 'admin-transactions',
         component: Transactions
       },
       {

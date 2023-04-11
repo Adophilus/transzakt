@@ -10,7 +10,7 @@ const props = defineProps(['user'])
     <div
       class="absolute hidden group-hover:flex items-center w-48 p-3 text-gray-600 -translate-x-1/2 bg-white rounded-lg drop-shadow-lg -top-16 left-1/2 dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white"
     >
-      <div class="truncate">
+      <div class="truncate text-xs">
         <p class="flex justify-between space-x-4 truncate">
           <span>Full name:</span>
           <span class="truncate"
