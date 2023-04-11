@@ -17,7 +17,7 @@ const routes = [
       },
       {
         path: 'users',
-        name: 'users',
+        name: 'admin-users',
         component: Users
       },
       {
