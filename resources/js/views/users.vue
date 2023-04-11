@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import useSWRV from 'swrv'
 
 import ArrowLongLeft from '../components/icons/arrow-long-left.vue'
@@ -15,11 +16,24 @@ import UserRegistrationModal from '../components/user-registration-modal.vue'
 import UserTransactionModal from '../components/user-transaction-modal.vue'
 import DeleteUserModalVue from '../components/delete-user-modal.vue'
 
+const route = useRoute()
+
 const currentTransactingUser = ref()
 const currentEditingUser = ref()
 const currentDeletingUser = ref()
+const usersApiUrl = ref('/api/users')
 
-const { data: users, mutate, isValidating, error } = useSWRV('/api/users')
+watch(() => route.query.cursor, () => {
+  const url = new URL(usersApiUrl.value, window.location.origin)
+  if (route.query.cursor) {
+    url.searchParams.set('cursor', route.query.cursor)
+  }
+  usersApiUrl.value = url.toString()
+})
+
+const { data, mutate, isValidating, error } = useSWRV(() => usersApiUrl.value)
+
+const users = computed(() => data.value?.data)
 const showUserRegistrationModal = ref(false)
 const showUserTransactionModal = ref(false)
 const showUserDeletingModal = ref(false)
@@ -32,7 +46,7 @@ const onUserRegistrationFormSubmitted = () => {
 const onUserTransactionFormSubmitted = async (event) => {
   const user = currentTransactingUser.value
   try {
-    const res = await fetch(`/api/users/${user.id}/transactions`, {
+    await fetch(`/api/users/${user.id}/transactions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -344,29 +358,27 @@ const onDeleteUser = (user) => {
       </div>
     </div>
 
-    <div class="mt-6 sm:flex sm:items-center sm:justify-between">
-      <div class="text-sm text-gray-800">
-        Page <span class="font-medium text-gray-700">1 of 10</span>
-      </div>
-
+    <div class="mt-6 sm:flex sm:items-center sm:justify-end">
       <div class="flex items-center mt-4 gap-x-4 sm:mt-0">
-        <a
-          href="#"
+        <router-link
+          :to="{ name: 'admin-users', query: { cursor: data?.prev_cursor } }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
+          v-show="!!data?.prev_cursor"
         >
           <ArrowLongLeft class="w-6 h-6" />
 
-          <span> previous </span>
-        </a>
+          <span> Previous </span>
+        </router-link>
 
-        <a
-          href="#"
+        <router-link
+          :to="{ name: 'admin-users', query: { cursor: data?.next_cursor } }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
+          v-show="!!data?.next_cursor"
         >
           <span> Next </span>
 
           <ArrowLongRight class="w-6 h-6" />
-        </a>
+        </router-link>
       </div>
     </div>
   </section>
