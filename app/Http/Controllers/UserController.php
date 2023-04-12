@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -14,6 +15,15 @@ class UserController extends Controller
   {
     $users = User::orderBy('first_name', 'ASC')->simplePaginate();
     return response($users, 200)->header('Content-Type', 'application/json');
+  }
+
+  public function searchUser(Request $request)
+  {
+    $search = $request->query('search');
+    $results = User::Search($search)->get();
+    Log::info('Searching for ' . $search);
+    Log::info($results);
+    return response([], 200)->header('Content-Type', 'application/json');
   }
 
   public function getUserById(string $user_id)
