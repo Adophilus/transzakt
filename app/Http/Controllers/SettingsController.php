@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class SettingsController extends Controller
 {
   public function getSettings()
   {
