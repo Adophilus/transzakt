@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,5 +57,10 @@ class User extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return ['id' => $this->id, 'first_name' => $this->first_name, 'last_name' => $this->last_name, 'email' => $this->email, 'account_number' => $this->account_number, 'created_at' => $this->created_at, 'updated_at' => $this->updated_at];
     }
 }
