@@ -24,18 +24,20 @@ const currentDeletingUser = ref()
 const usersApiUrl = ref('/api/users')
 
 watch(
-  () => route.query.cursor,
+  () => route.query.page,
   () => {
     const url = new URL(usersApiUrl.value, window.location.origin)
-    if (route.query.cursor) {
-      url.searchParams.set('cursor', route.query.cursor)
-    }
+    url.searchParams.set('page', route.query.page)
     usersApiUrl.value = url.toString()
   }
 )
 
 const { data, mutate, isValidating, error } = useSWRV(() => usersApiUrl.value)
 
+const pagination = computed(() => ({
+  next: data?.value?.next_page_url ? new URL(data.value.next_page_url).searchParams.get('page') : null,
+  prev: data?.value?.prev_page_url ? new URL(data.value.prev_page_url).searchParams.get('page') : null,
+}))
 const users = computed(() => data.value?.data)
 const showUserRegistrationModal = ref(false)
 const showUserTransactionModal = ref(false)
@@ -364,9 +366,9 @@ const onDeleteUser = (user) => {
     <div class="mt-6 sm:flex sm:items-center sm:justify-end">
       <div class="flex items-center mt-4 gap-x-4 sm:mt-0">
         <router-link
-          :to="{ name: 'admin-users', query: { cursor: data?.prev_cursor } }"
+          :to="{ name: 'admin-users', query: { page: pagination.prev } }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-          v-show="!!data?.prev_cursor"
+          v-show="!!pagination.prev"
         >
           <ArrowLongLeft class="w-6 h-6" />
 
@@ -374,9 +376,9 @@ const onDeleteUser = (user) => {
         </router-link>
 
         <router-link
-          :to="{ name: 'admin-users', query: { cursor: data?.next_cursor } }"
+          :to="{ name: 'admin-users', query: { page: pagination.next} }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-          v-show="!!data?.next_cursor"
+          v-show="!!pagination.next"
         >
           <span> Next </span>
 

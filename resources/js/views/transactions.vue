@@ -21,21 +21,24 @@ const showTransactionModal = ref(false)
 const transactionsApiUrl = ref('/api/transactions')
 
 watch(
-  () => route.query.cursor,
+  () => route.query.page,
   () => {
     const url = new URL(transactionsApiUrl.value, window.location.origin)
-    if (route.query.cursor) {
-      url.searchParams.set('cursor', route.query.cursor)
-    }
+    url.searchParams.set('page', route.query.page)
     transactionsApiUrl.value = url.toString()
-    console.log(transactionsApiUrl)
   }
 )
 
 const { data, mutate, isValidating, error } = useSWRV(
   () => transactionsApiUrl.value
 )
+
+const pagination = computed(() => ({
+  next: data?.value?.next_page_url ? new URL(data.value.next_page_url).searchParams.get('page') : null,
+  prev: data?.value?.prev_page_url ? new URL(data.value.prev_page_url).searchParams.get('page') : null,
+}))
 const transactions = computed(() => data.value?.data)
+watch(() => data.value, () => console.log(data.value))
 
 const onTransactionFormSubmitted = async () => {
   mutate()
@@ -328,10 +331,10 @@ const deleteTransaction = async (transaction) => {
         <router-link
           :to="{
             name: 'admin-transactions',
-            query: { cursor: data?.prev_cursor }
+            query: { page: pagination.prev }
           }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-          v-show="!!data?.prev_cursor"
+          v-show="!!pagination.prev"
         >
           <ArrowLongLeft class="w-6 h-6" />
 
@@ -341,10 +344,10 @@ const deleteTransaction = async (transaction) => {
         <router-link
           :to="{
             name: 'admin-transactions',
-            query: { cursor: data?.next_cursor }
+            query: { page: pagination.next }
           }"
           class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-          v-show="!!data?.next_cursor"
+          v-show="!!pagination.next"
         >
           <span> Next </span>
 
