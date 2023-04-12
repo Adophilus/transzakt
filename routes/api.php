@@ -22,8 +22,9 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->na
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPassword'])->name('api.reset-password');
 
 Route::get('/users', [App\Http\Controllers\UserController::class, 'getUsers']);
-Route::get('/users/{user_id}', [App\Http\Controllers\UserController::class, 'getUserById']);
 Route::post('/users', [App\Http\Controllers\UserController::class, 'createUser']);
+Route::get('/users/search', [App\Http\Controllers\UserController::class, 'searchUser']);
+Route::get('/users/{user_id}', [App\Http\Controllers\UserController::class, 'getUserById']);
 Route::patch('/users/{user_id}', [App\Http\Controllers\UserController::class, 'updateUser']);
 Route::delete('/users/{user_id}', [App\Http\Controllers\UserController::class, 'deleteUser']);
 Route::post('/users/{user_id}/transactions', [App\Http\Controllers\UserController::class, 'createTransaction']);
@@ -35,4 +36,4 @@ Route::get('/transactions/{transaction_id}', [App\Http\Controllers\TransactionCo
 Route::patch('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'updateTransaction']);
 Route::delete('/transactions/{transaction_id}', [App\Http\Controllers\TransactionController::class, 'deleteTransaction']);
 
-Route::get('/settings', [App\Http\Controllers\SettingController::class, 'getSettings']);
+Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'getSettings']);
